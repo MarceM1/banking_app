@@ -18,8 +18,8 @@ const inter = Inter({subsets:['latin'], variable: '--font-inter'})
 const ibmPlexSerif = IBM_Plex_Serif({subsets:['latin'], weight: ['400','700'], variable: '--font-ibm-plex-serif'})
 
 export const metadata: Metadata = {
-  title: "horizon",
-  description: "horizon is a modern banking plataform for everyone",
+  title: "Horizon",
+  description: "Horizon is a modern banking plataform for everyone",
   icons:{
     icon:'/icons/logo.svg'
   }
