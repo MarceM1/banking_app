@@ -1,17 +1,20 @@
+import { getLoggedInUser } from "@/lib/actions/user.actions";
 import MobileNavbar from "../components/MobileNavbar";
 import Sidebar from "../components/Sidebar";
 import Image from 'next/image'
+import { redirect } from "next/navigation";
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const loggedIn = {
-        firstName: "Marcelo",
-        lastName: "Melogno",
-        email:'marcelomelogno1986@gmail.com'
-    }
+
+    const loggedIn = await getLoggedInUser()
+    // console.log(loggedIn)
+
+    if (!loggedIn) redirect('/sign-in'); //evita tener que usar useRouter(), que es un componente del lado del servidor
+
 
     return (
         <main className="flex h-screen w-full font-inter">
