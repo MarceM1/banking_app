@@ -14,6 +14,7 @@ import { authFormSchema } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
 import { signIn, signUp } from "@/lib/actions/user.actions"
 import { useRouter } from "next/navigation"
+import PlaidLink from "./PlaidLink"
 
 
 
@@ -38,7 +39,7 @@ const AuthForm = ({ type }: { type: string }) => {
 			postalCode: '',
 			dateOfBirth: '',
 			ssn: '',
-			city1: '',
+			city: '',
 		},
 	})
 
@@ -57,7 +58,7 @@ const AuthForm = ({ type }: { type: string }) => {
 					firstName: data.firstName!,
 					lastName: data.lastName!,
 					address1: data.address1!,
-					city1: data.city1!,
+					city: data.city!,
 					state: data.state!,
 					postalCode: data.postalCode!,
 					dateOfBirth: data.dateOfBirth!,
@@ -145,7 +146,10 @@ const AuthForm = ({ type }: { type: string }) => {
 			</header>
 			{user ? (
 				<div className="flex flex-col gap-4">
-					{/* PaidLink */}
+					<PlaidLink
+						user={user!}
+						variant='primary'
+					/>
 				</div>
 			) : (
 				<>
@@ -158,7 +162,7 @@ const AuthForm = ({ type }: { type: string }) => {
 										<CustomInput control={form.control} name="lastName" label="Last Name" placeholder="ex: Doe" />
 									</div>
 									<CustomInput control={form.control} name="address1" label="Address" placeholder="Enter your specific address" />
-									<CustomInput control={form.control} name="city1" label="City" placeholder="Enter your city" />
+									<CustomInput control={form.control} name="city" label="City" placeholder="Enter your city" />
 									<div className="flex gap-2">
 										<CustomInput control={form.control} name="state" label="State" placeholder="ex: NY" />
 										<CustomInput control={form.control} name="postalCode" label="Postal Code" placeholder="ex: 11101" />
