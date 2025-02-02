@@ -1,5 +1,5 @@
-import BankCard from "@/app/components/BankCard"
-import HeaderBox from "@/app/components/HeaderBox"
+import BankCard from "@/components/BankCard"
+import HeaderBox from "@/components/HeaderBox"
 import { getAccounts } from "@/lib/actions/bank.actions"
 import { getLoggedInUser } from "@/lib/actions/user.actions"
 

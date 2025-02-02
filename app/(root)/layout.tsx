@@ -1,6 +1,6 @@
 import { getLoggedInUser } from "@/lib/actions/user.actions";
-import MobileNavbar from "../components/MobileNavbar";
-import Sidebar from "../components/Sidebar";
+import MobileNavbar from "../../components/MobileNavbar";
+import Sidebar from "../../components/Sidebar";
 import Image from 'next/image'
 import { redirect } from "next/navigation";
 

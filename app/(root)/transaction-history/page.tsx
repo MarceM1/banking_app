@@ -1,5 +1,5 @@
-import HeaderBox from '@/app/components/HeaderBox'
-import TransactionTable from '@/app/components/TransactionTable'
+import HeaderBox from '@/components/HeaderBox'
+import TransactionTable from '@/components/TransactionTable'
 import { getAccount, getAccounts } from '@/lib/actions/bank.actions'
 import { getLoggedInUser } from '@/lib/actions/user.actions'
 import { formatAmount } from '@/lib/utils'

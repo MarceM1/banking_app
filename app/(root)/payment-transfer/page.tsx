@@ -1,4 +1,4 @@
-import HeaderBox from '@/app/components/HeaderBox'
+import HeaderBox from '@/components/HeaderBox'
 import React from 'react'
 
 const PaymentTransfer
@@ -10,10 +10,11 @@ const PaymentTransfer
           subtext='Please provide any specific details or notes related to the payment.'
         />
         <section className="size-full pt-5">
-          
+
         </section>
     </section>
   )
 }
 
 export default PaymentTransfer
+ 

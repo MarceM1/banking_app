@@ -1,9 +1,9 @@
 import { getLoggedInUser } from "@/lib/actions/user.actions"
-import HeaderBox from "../components/HeaderBox"
-import RightSidebar from "../components/RightSidebar"
-import TotalBalancebox from "../components/TotalBalancebox"
+import HeaderBox from "../../components/HeaderBox"
+import RightSidebar from "../../components/RightSidebar"
+import TotalBalancebox from "../../components/TotalBalancebox"
 import { getAccount, getAccounts } from "@/lib/actions/bank.actions"
-import RecentTransactions from "../components/RecentTransactions"
+import RecentTransactions from "../../components/RecentTransactions"
 
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
   const currentPage = Number(page as string) || 1
