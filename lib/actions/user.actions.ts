@@ -1,5 +1,5 @@
 "use server";
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { createSessionClient, createAdminClient } from "../appwrite";
 import { cookies } from "next/headers";
 import { encryptId, extractCustomerIdFromUrl, parseStringify } from "../utils";
@@ -19,6 +19,23 @@ const {
   APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
 } = process.env;
 
+export const getUserInfo = async ({ userId }: getUserInfoProps) => {
+  try {
+    const { database } = await createAdminClient();
+
+    const user = await database.listDocuments(
+      DATABASE_ID!,
+      USER_COLLECTION_ID!,
+      [Query.equal("userId", [userId])]
+    );
+
+    return parseStringify(user.documents[0]);
+  } catch (error) {
+    console.error("Error", error);
+    return null;
+  }
+};
+
 export const signIn = async ({ email, password }: signInProps) => {
   try {
     const { account } = await createAdminClient();
@@ -32,20 +49,27 @@ export const signIn = async ({ email, password }: signInProps) => {
       secure: true,
     });
 
-    return parseStringify(session);
+    const user = await getUserInfo({ userId: session.userId });
+
+    return parseStringify(user);
   } catch (error) {
     console.log("Error: ", error);
   }
 };
 
-export const signUp = async ({password, ...userData}: SignUpParams) => {
+export const signUp = async ({ password, ...userData }: SignUpParams) => {
+  console.log("dentro de signUp");
   const { email, firstName, lastName } = userData;
+  console.log("userData: ", userData);
+  console.log("password: ", password);
 
   let newUserAccount;
   try {
-    //console.log("Creando cliente de Appwrite...");
+    console.log("Creando cliente de Appwrite...");
     const { account, database } = await createAdminClient();
-    //console.log("Cliente creado, creando usuario...");
+    console.log("account y database: ", account, database);
+
+    console.log("Cliente creado, creando usuario...");
 
     newUserAccount = await account.create(
       ID.unique(),
@@ -77,9 +101,9 @@ export const signUp = async ({password, ...userData}: SignUpParams) => {
       }
     );
 
-    //console.log("Usuario creado:", newUserAccount);
+    console.log("Usuario creado:", newUserAccount);
     const session = await account.createEmailPasswordSession(email, password);
-    //console.log("Sesión creada:", session);
+    console.log("Sesión creada:", session);
 
     cookies().set("bankapp-session", session.secret, {
       path: "/",
@@ -87,7 +111,7 @@ export const signUp = async ({password, ...userData}: SignUpParams) => {
       sameSite: "strict",
       secure: true,
     });
-    //console.log("Cookie establecida");
+    console.log("Cookie establecida");
     return parseStringify(newUser);
   } catch (error) {
     console.log("Error en signUp: ", error);
@@ -101,8 +125,9 @@ export async function getLoggedInUser() {
     // console.log("iniciando getLoggeInUser");
     const { account } = await createSessionClient();
     // console.log("Account: ",account);
-    const user = await account.get();
+    const result = await account.get();
     // console.log("User: ", user);
+    const user = await getUserInfo({ userId: result.$id });
     return parseStringify(user);
   } catch (error) {
     // console.error("Error en getLoggedInUsers: ", error);
@@ -131,7 +156,7 @@ export const createLinkToken = async (user: User) => {
         client_user_id: user.$id,
       },
       client_name: `${user.firstName} ${user.lastName}`,
-      products: ["auth"] as Products[],
+      products: ["auth", "transactions"] as Products[],
       language: "en",
       country_codes: ["US"] as CountryCode[],
     };
@@ -152,7 +177,9 @@ export const createBankAccount = async ({
   fundingSourceUrl,
   shareableId,
 }: createBankAccountProps) => {
+  console.log("dentro de createBankAccount(**)");
   try {
+    console.log("(**)dentro del try");
     const { database } = await createAdminClient();
 
     const bankAccount = await database.createDocument(
@@ -168,6 +195,7 @@ export const createBankAccount = async ({
         shareableId,
       }
     );
+    console.log("bankAccount :", bankAccount);
 
     return parseStringify(bankAccount);
   } catch (error) {
@@ -232,5 +260,65 @@ export const exchangePublicToken = async ({
     });
   } catch (error) {
     console.log("An error occurred while creating exchanging token: ", error);
+  }
+};
+
+// get user bank accounts
+export const getBanks = async ({ userId }: getBanksProps) => {
+  try {
+    const { database } = await createAdminClient();
+
+    const banks = await database.listDocuments(
+      DATABASE_ID!,
+      BANK_COLLECTION_ID!,
+      [Query.equal("userId", [userId])]
+    );
+
+    return parseStringify(banks.documents);
+  } catch (error) {
+    console.error("Error", error);
+    return null;
+  }
+};
+
+// get specific bank from bank collection by document id
+export const getBank = async ({ documentId }: getBankProps) => {
+  try {
+    const { database } = await createAdminClient();
+
+    const bank = await database.listDocuments(
+      DATABASE_ID!,
+      BANK_COLLECTION_ID!,
+      [Query.equal("$id", [documentId])]
+    );
+
+    if (bank.total !== 1) return null;
+
+    return parseStringify(bank.documents[0]);
+  } catch (error) {
+    console.error("Error", error);
+    return null;
+  }
+};
+
+// get specific bank from bank collection by account id
+export const getBankByAccountId = async ({
+  accountId,
+}: getBankByAccountIdProps) => {
+  try {
+    const { database } = await createAdminClient();
+
+    const bank = await database.listDocuments(
+      DATABASE_ID!,
+      BANK_COLLECTION_ID!,
+      [Query.equal("accountId", [accountId])]
+    );
+
+    if (bank.total !== 1) return null;
+
+    return parseStringify(bank.documents[0]);
+  } catch (error) {
+    console.error("Error", error);
+    return null;
   }
 };
