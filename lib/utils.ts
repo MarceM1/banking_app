@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-prototype-builtins */
 import { type ClassValue, clsx } from "clsx";
 import qs from "query-string";
@@ -137,6 +138,7 @@ export function countTransactionCategories(
   let totalCount = 0;
 
   // Iterate over each transaction
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   transactions &&
     transactions.forEach((transaction) => {
       // Extract the category from the transaction
@@ -168,6 +170,7 @@ export function countTransactionCategories(
 
   return aggregatedCategories;
 }
+
 
 export function extractCustomerIdFromUrl(url: string) {
   // Split the URL string by '/'

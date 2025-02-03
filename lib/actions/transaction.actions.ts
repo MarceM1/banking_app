@@ -32,7 +32,7 @@ export const createTransaction = async (transaction: CreateTransactionProps) => 
 
 export const getTransactionsByBankId = async ({bankId}: getTransactionsByBankIdProps) => {
   try {
-    console.log('dentro del try de getTransactionsByBankId')
+    // console.log('dentro del try de getTransactionsByBankId')
     const { database } = await createAdminClient();
 
     const senderTransactions = await database.listDocuments(
@@ -40,7 +40,6 @@ export const getTransactionsByBankId = async ({bankId}: getTransactionsByBankIdP
       TRANSACTION_COLLECTION_ID!,
       [Query.equal('senderBankId', bankId)],
     )
-    console.log('senderBankId')
 
     const receiverTransactions = await database.listDocuments(
       DATABASE_ID!,
